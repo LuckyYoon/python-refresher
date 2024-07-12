@@ -88,14 +88,16 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia):
 
 # Problem 10
 def simulate_auv2_motion(T, alpha, L, l, mass, inertia, dt, t_final, x0, y0, theta0):
-    t = np.array[t_final + 1]
-    X = np.array[t_final + 1]
-    y = np.array[t_final + 1]
-    theta = np.array[t_final + 1]
-    v = np.array[t_final + 1]
-    omega = np.array[t_final + 1]
-    a = np.array[t_final + 1]
+    t = np.array[t_final / dt + 1]
+    X = np.array[t_final / dt + 1]
+    y = np.array[t_final / dt + 1]
+    theta = np.array[t_final / dt + 1]
+    v = np.array[t_final / dt + 1]
+    omega = np.array[t_final / dt + 1]
+    a = np.array[t_final / dt + 1]
 
-    for i in range(0, t_final + 1):
-        t[i] = i
-        a[t[i]] = calculate_auv2_acceleration(T, alpha, theta)
+    distance = np.sqrt(L**2 + l**2)
+
+    for i in range(0, t_final / dt + 1):
+        t[i] = i / (1 / dt)
+        a[t[i]] = calculate_auv2_acceleration(T, alpha, theta[i])
