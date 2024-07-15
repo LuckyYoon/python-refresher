@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 g = 9.81
 
@@ -90,14 +91,36 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia):
 def simulate_auv2_motion(T, alpha, L, l, mass, inertia, dt, t_final, x0, y0, theta0):
     t = np.array[t_final / dt + 1]
     X = np.array[t_final / dt + 1]
-    y = np.array[t_final / dt + 1]
+    Y = np.array[t_final / dt + 1]
     theta = np.array[t_final / dt + 1]
     v = np.array[t_final / dt + 1]
     omega = np.array[t_final / dt + 1]
     a = np.array[t_final / dt + 1]
 
-    distance = np.sqrt(L**2 + l**2)
+    # distance = np.sqrt(L**2 + l**2)
+    t[0] = 0
+    a[0] = 0
+    omega[0] = 0
+    theta[0] = theta0
+    v[0] = 0
+    X[0] = x0
+    Y[0] = y0
 
-    for i in range(0, t_final / dt + 1):
+    for i in range(1, t_final / dt + 1):
         t[i] = i / (1 / dt)
-        a[t[i]] = calculate_auv2_acceleration(T, alpha, theta[i])
+        a[i] = calculate_auv2_acceleration(T, alpha, theta[i])
+        omega[i] = (
+            omega[i - 1]
+            + calculate_auv2_angular_acceleration(T, alpha, L, l, inertia) * dt
+        )
+        theta[i] = theta[i - 1] + omega[i] * dt
+        v[i] = v[i - 1] + a[i] * dt
+        X[i] = X[i - 1] + np.cos(theta[i]) * v[i]
+        Y[i] = Y[i - 1] + np.sin(theta[i]) * v[i]
+
+        return (t, X, Y, theta, v, omega, a)
+
+
+def plot_auv2_motion(t, X, Y, theta, v, omega, a):
+    plt.plot(X, Y)
+    plt.show()
