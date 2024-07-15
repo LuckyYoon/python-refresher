@@ -11,7 +11,9 @@ def calculate_buoyancy(volume, density_fluid):
 
 # Problem 2
 def will_it_float(volume, mass):
-    if mass / volume < 1000:
+    if volume <= 0:
+        raise ValueError("VOLUME MUST BE POSITIVE")
+    elif mass / volume < 1000:
         return True
     else:
         return False
@@ -19,16 +21,25 @@ def will_it_float(volume, mass):
 
 # Problem 3
 def calculate_pressure(depth):
-    return depth * g * 1000
+    depth = abs(depth)
+    return depth * g * 1000 + 101325
 
 
 # Problem 4
 def calculate_acceleration(force, mass):
+    if force == 0:
+        raise ValueError("FORCE CANNOT BE ZERO")
+    elif mass <= 0:
+        raise ValueError("MASS MUST BE POSITIVE")
     return force / mass
 
 
 # Problem 5
 def calculate_angular_acceleration(torque, I):
+    if I <= 0:
+        raise ValueError("MOMENT OF INERTIA MUST BE POSITIVE")
+    elif torque == 0:
+        raise ValueError("TORQUE CANNOT BE ZERO")
     return torque / I
 
 
@@ -40,6 +51,8 @@ def calculate_torque(F_magnitude, F_direction, radius):
 
 # Problem 7
 def calculate_moment_of_inertia(mass, radius):
+    if mass <= 0 or radius <= 0:
+        raise ValueError("MASS AND RADIUS MUST BE POSITIVE")
     return mass * radius**2
 
 
@@ -54,7 +67,7 @@ def calculate_auv_acceleration(F_magnitude, F_angle, mass, volume, thruster_dist
     )
 
 
-# MAYBE??? SEPERATED X AND Y COMPONENTS
+# MAYBE???
 # np.sqrt((np.sin(F_angle) * F_magnitude + volume * g * 1000) ** 2 + (np.cos(F_angle) * F_magnitude) ** 2) / mass
 # OR
 # np.sqrt((F_magnitude * thruster_distance * np.sin(F_angle)) ** 2 + (volume * g * 1000) ** 2) / mass
